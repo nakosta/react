@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const token = localStorage.getItem("authToken");
+const getAuthToken = () => localStorage.getItem("authToken");
 
 const apiClient = axios.create({
   baseURL: import.meta.env.VITE_BASE_URL,
@@ -11,11 +11,13 @@ const apiClient = axios.create({
 });
 
 apiClient.interceptors.request.use((config) => {
+  const token = getAuthToken();
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
 });
+
 
 export async function registration(order) {
   try {
@@ -80,7 +82,7 @@ export async function isCompleted(id) {
   }
 }
 
-export async function deleteAxios(id) {
+export async function deleteFetch(id) {
   try {
     const { data } = await apiClient.delete(`/todos/${id}`);
     return data;

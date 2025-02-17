@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { List } from "antd";
 import { useSelector, useDispatch } from "react-redux";
-import { axiosTasks } from "../../redux/slices/tasksSlice";
+import { fetchTasks } from "../../redux/slices/tasksSlice";
 import styles from "./index.module.css";
 import TaskItem from "../TaskItem";
 import withLogger from "../withLogger";
@@ -13,7 +13,7 @@ const TaskList = () => {
   const { tasks, status, error } = useSelector((state) => state.tasks);
   
   useEffect(() => {
-    dispatch(axiosTasks());
+    dispatch(fetchTasks());
   }, [dispatch]);
 
   if (status === "loading") return <p>Loading tasks...</p>;

@@ -3,11 +3,11 @@ import {
   getTasks,
   createTask,
   editTask,
-  deleteAxios,
+  deleteFetch,
   isCompleted,
 } from "../../apiAxios";
 
-export const axiosTasks = createAsyncThunk(
+export const fetchTasks = createAsyncThunk(
   "tasks/fetchTasks",
   async (_, thunkAPI) => {
     try {
@@ -47,7 +47,7 @@ export const deleteTaskById = createAsyncThunk(
   "tasks/deleteTaskById",
   async (id, thunkAPI) => {
     try {
-      await deleteAxios(id);
+      await deleteFetch(id);
       return id;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);
@@ -77,16 +77,16 @@ const tasksSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      // axiosTasks
-      .addCase(axiosTasks.pending, (state) => {
+      // fetchTasks
+      .addCase(fetchTasks.pending, (state) => {
         state.status = "loading";
         state.error = null;
       })
-      .addCase(axiosTasks.fulfilled, (state, action) => {
+      .addCase(fetchTasks.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.tasks = action.payload;
       })
-      .addCase(axiosTasks.rejected, (state, action) => {
+      .addCase(fetchTasks.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
       })

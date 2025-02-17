@@ -1,4 +1,4 @@
-const token = localStorage.getItem("authToken");
+const getAuthToken = () => localStorage.getItem("authToken");
 
 export async function registration(order) {
   try {
@@ -52,7 +52,7 @@ export async function createTask(task) {
       method: "POST",
       headers: {
         accept: "application/json",
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${getAuthToken()}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ title: task }),
@@ -70,7 +70,7 @@ export async function getTasks() {
       method: "GET",
       headers: {
         accept: "application/json",
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${getAuthToken()}`,
       },
     });
     const data = await response.json();
@@ -88,7 +88,7 @@ export async function editTask(task, id) {
         method: "PATCH",
         headers: {
           accept: "application/json",
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${getAuthToken()}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ title: task }),
@@ -109,7 +109,7 @@ export async function isCompleted(id) {
         method: "PATCH",
         headers: {
           accept: "application/json",
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${getAuthToken()}`,
           "Content-Type": "application/json",
         },
       }
@@ -129,7 +129,7 @@ export async function deleteFetch(id) {
         method: "DELETE",
         headers: {
           accept: "application/json",
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${getAuthToken()}`,
         },
       }
     );
@@ -148,6 +148,15 @@ export async function deleteFetch(id) {
 // "age": 27
 
 // "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im5ha29zdGE2NjZAbWFpbC5ydSIsImlkIjo3MjMsImlhdCI6MTcxNzEzMTA4MX0.kly-kubaJsGpD6-rfWob5SMZiBGUx9IjCdqVa5bi1Mc"
+
+//   "id": 540,
+//   "username": "nakosta666",
+//   "email": "nakosta666@mail.ru",
+//   "password": "Qwerty12345$",
+//   "gender": "male",
+//   "age": 27
+
+// "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im5ha29zdGE2NjZAbWFpbC5ydSIsImlkIjo1NDAsImlhdCI6MTczOTc3NzI3Nn0.ePnhZ6tFIE5QC0NF9KLDRLaD7BxuBg5tPPXjNsK-c1g"
 
 // async function main() {
 //   // зарегистрировать пользователя

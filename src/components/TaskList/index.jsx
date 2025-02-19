@@ -1,7 +1,6 @@
-import React, { useEffect } from "react";
-import { List } from "antd";
-import { useSelector, useDispatch } from "react-redux";
-import { fetchTasks } from "../../redux/slices/tasksSlice";
+import React from "react";
+import { List, Spin } from "antd";
+import { useGetTasksQuery } from "../../tasksApi";
 import styles from "./index.module.css";
 import TaskItem from "../TaskItem";
 import withLogger from "../withLogger";
@@ -9,15 +8,10 @@ import withLogger from "../withLogger";
 const LoggedTaskItem = withLogger(TaskItem);
 
 const TaskList = () => {
-  const dispatch = useDispatch();
-  const { tasks, status, error } = useSelector((state) => state.tasks);
-  
-  useEffect(() => {
-    dispatch(fetchTasks());
-  }, [dispatch]);
+  const { data: tasks = [], loading, error } = useGetTasksQuery();
 
-  if (status === "loading") return <p>Loading tasks...</p>;
-  if (error) return <p>Error: {error}</p>;
+  if (loading) return <Spin size="large" />;
+  if (error) return <p>Error: {error.message}</p>;
 
   return (
     <List

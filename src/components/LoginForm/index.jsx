@@ -2,17 +2,18 @@ import React from "react";
 import { Form, Input, Button, Typography } from "antd";
 import { useNavigate, Link } from "react-router-dom";
 import styles from "./index.module.css";
-import { login } from "../../apiAxios";
+import { useLoginUserMutation } from "../../tasksApi";
 
 const { Title } = Typography;
 
 const LoginForm = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
+  const [loginUser, { isLoading }] = useLoginUserMutation();
 
   const handleLogin = async (values) => {
     try {
-      const { token } = await login(values);
+      const { token } = await loginUser(values).unwrap();
       if (token) {
         localStorage.setItem("authToken", token);
         navigate("/todolist");
@@ -27,7 +28,6 @@ const LoginForm = () => {
   return (
     <div className={styles.container}>
       <Form form={form} layout="vertical" onFinish={handleLogin}>
-        {/* Email */}
         <Form.Item
           label="Email"
           name="email"
@@ -39,7 +39,6 @@ const LoginForm = () => {
           <Input placeholder="Enter your email" />
         </Form.Item>
 
-        {/* Password */}
         <Form.Item
           label="Password"
           name="password"
@@ -48,9 +47,8 @@ const LoginForm = () => {
           <Input.Password placeholder="Enter your password" />
         </Form.Item>
 
-        {/* Submit Button */}
         <Form.Item>
-          <Button type="primary" htmlType="submit" block>
+          <Button type="primary" htmlType="submit" block loading={isLoading}>
             Log In
           </Button>
         </Form.Item>

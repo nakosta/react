@@ -1,19 +1,19 @@
 import React from "react";
-import { Form, Input, InputNumber, Button, Radio } from "antd";
+import { Form, Input, InputNumber, Button, Radio, Typography } from "antd";
 import { useNavigate, Link } from "react-router-dom";
 import styles from "./index.module.css";
-import { registration } from "../../apiAxios";
-import { Typography } from "antd";
+import { useRegisterUserMutation } from "../../tasksApi";
 
 const { Title } = Typography;
 
 const RegistrationForm = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
+  const [registerUser, { isLoading }] = useRegisterUserMutation();
 
   const handleRegistration = async (values) => {
     try {
-      await registration(values);
+      await registerUser(values).unwrap();
       navigate("/login");
     } catch (error) {
       console.error("Registration error:", error);
@@ -23,7 +23,6 @@ const RegistrationForm = () => {
   return (
     <div className={styles.container}>
       <Form form={form} layout="vertical" onFinish={handleRegistration}>
-        {/* Username */}
         <Form.Item
           label="Username"
           name="username"
@@ -32,7 +31,6 @@ const RegistrationForm = () => {
           <Input placeholder="Enter your username" />
         </Form.Item>
 
-        {/* Email */}
         <Form.Item
           label="Email"
           name="email"
@@ -44,7 +42,6 @@ const RegistrationForm = () => {
           <Input placeholder="Enter your email" />
         </Form.Item>
 
-        {/* Password */}
         <Form.Item
           label="Password"
           name="password"
@@ -53,7 +50,6 @@ const RegistrationForm = () => {
           <Input.Password placeholder="Enter your password" />
         </Form.Item>
 
-        {/* Gender */}
         <Form.Item
           label="Gender"
           name="gender"
@@ -65,7 +61,6 @@ const RegistrationForm = () => {
           </Radio.Group>
         </Form.Item>
 
-        {/* Age */}
         <Form.Item
           label="Age"
           name="age"
@@ -85,9 +80,8 @@ const RegistrationForm = () => {
           />
         </Form.Item>
 
-        {/* Submit Button */}
         <Form.Item>
-          <Button type="primary" htmlType="submit" block>
+          <Button type="primary" htmlType="submit" block loading={isLoading}>
             Sign Up
           </Button>
         </Form.Item>

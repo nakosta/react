@@ -18,7 +18,6 @@ apiClient.interceptors.request.use((config) => {
   return config;
 });
 
-
 export async function registration(order) {
   try {
     const { data } = await apiClient.post("/users/register", order);

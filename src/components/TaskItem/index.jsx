@@ -3,11 +3,6 @@ import { Input, Button, List, Typography } from "antd";
 import styles from "./index.module.css";
 import { FormOutlined, DeleteOutlined } from "@ant-design/icons";
 import {
-  updateTaskById,
-  deleteTaskById,
-  toggleTask,
-} from "../../redux/slices/tasksSlice";
-import {
   setEditingText,
   clearEditingText,
 } from "../../redux/slices/editingTextSlice";
@@ -15,15 +10,24 @@ import {
   setEditingTask,
   clearEditingTask,
 } from "../../redux/slices/editingTaskSlice";
+import {
+  useEditTaskMutation,
+  useDeleteTaskMutation,
+  useToggleTaskMutation,
+} from "../../tasksApi";
 
 const TaskItem = ({ item, logAction }) => {
   const dispatch = useDispatch();
   const editingText = useSelector((state) => state.editingText.value);
   const editingTask = useSelector((state) => state.editingTask.value);
 
+  const [updateTask] = useEditTaskMutation();
+  const [deleteTask] = useDeleteTaskMutation();
+  const [toggleTask] = useToggleTaskMutation();
+
   // Переключение состояния "выполнено"
-  const toggleComplete = (id) => {
-    dispatch(toggleTask(id));
+  const toggleComplete = async (id) => {
+    await toggleTask(id);
     logAction("Изменен статус задачи", { id });
   };
 
@@ -35,16 +39,18 @@ const TaskItem = ({ item, logAction }) => {
   };
 
   // Сохранение изменений задачи
-  const updateTask = (id) => {
-    dispatch(updateTaskById({ id, updatedText: editingText }));
+  const updateTaskHandler = async (id) => {
+    if (editingText.trim()) {
+      await updateTask({ id, title: editingText });
+      logAction("Обновлена задача", { id, title: editingText });
+    }
     dispatch(clearEditingTask());
     dispatch(clearEditingText());
-    logAction("Обновлена задача", { id, title: editingText });
   };
 
   // Удаление задачи
-  const deleteTask = (id) => {
-    dispatch(deleteTaskById(id));
+  const deleteTaskHandler = async (id) => {
+    await deleteTask(id);
     logAction("Удалена задача", { id });
   };
 
@@ -59,7 +65,7 @@ const TaskItem = ({ item, logAction }) => {
             key="update"
             onClick={(e) => {
               e.stopPropagation();
-              updateTask(item.id);
+              updateTaskHandler(item.id);
             }}
           >
             Update
@@ -77,7 +83,7 @@ const TaskItem = ({ item, logAction }) => {
           key="delete"
           onClick={(e) => {
             e.stopPropagation();
-            deleteTask(item.id);
+            deleteTaskHandler(item.id);
           }}
         />,
       ]}
@@ -86,7 +92,7 @@ const TaskItem = ({ item, logAction }) => {
         <Input
           value={editingText}
           onChange={(e) => dispatch(setEditingText(e.target.value))}
-          onPressEnter={() => updateTask(item.id)}
+          onPressEnter={() => updateTaskHandler(item.id)}
         />
       ) : (
         <Typography.Text

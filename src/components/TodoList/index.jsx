@@ -10,12 +10,9 @@ const LoggedTaskInput = withLogger(TaskInput);
 const TodoList = () => (
   <>
     <div className={styles.container}>
-      {/* Форма добавления задачи */}
       <LoggedTaskInput />
-      {/* Список задач */}
       <TaskList />
     </div>
-    {/* Кнопка выхода */}
     <LogoutButton />
     <TaskStats />
   </>

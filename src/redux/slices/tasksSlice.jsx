@@ -77,7 +77,6 @@ const tasksSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      // fetchTasks
       .addCase(fetchTasks.pending, (state) => {
         state.status = "loading";
         state.error = null;
@@ -90,21 +89,17 @@ const tasksSlice = createSlice({
         state.status = "failed";
         state.error = action.payload;
       })
-      // createNewTask
       .addCase(createNewTask.fulfilled, (state, action) => {
         state.tasks.push(action.payload);
       })
-      // updateTaskById
       .addCase(updateTaskById.fulfilled, (state, action) => {
         state.tasks = state.tasks.map((task) =>
           task.id === action.payload.id ? action.payload : task
         );
       })
-      // deleteTaskById
       .addCase(deleteTaskById.fulfilled, (state, action) => {
         state.tasks = state.tasks.filter((task) => task.id !== action.payload);
       })
-      // toggleTask
       .addCase(toggleTask.fulfilled, (state, action) => {
         state.tasks = state.tasks.map((task) =>
           task.id === action.payload
